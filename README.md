@@ -26,6 +26,8 @@ Send a POST request to `/form-company` with a JSON payload in the following form
     "incorporator_name": "John Smith"
 }
 ```
+https://cs1060-hw6.vercel.app/
+
 
 ### Validation Rules:
 - Company name: Can contain alphanumeric characters, spaces, commas, periods, apostrophes, and ampersands
