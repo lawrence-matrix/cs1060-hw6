@@ -33,9 +33,14 @@ Send a POST request to `/form-company` with a JSON payload in the following form
 - Company type: Must be either "corporation" or "LLC"
 - Incorporator name: Required field
 
+### Supported Formations:
+- Delaware corporations and LLCs
+- California corporations and LLCs
+- New York corporations and LLCs
+
 ### Response:
-- For Delaware corporations: Returns a PDF file containing the Articles of Incorporation
-- For other states/company types: Returns a 400 error indicating unsupported formation type
+- Returns a PDF file containing the appropriate formation certificate for supported states
+- Unsupported states or company types return a 400 error
 
 ## Example cURL Request:
 ```bash

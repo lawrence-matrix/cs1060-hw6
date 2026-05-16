@@ -1,5 +1,12 @@
 import pytest
-from app import CompanyFormation, generate_delaware_articles, generate_california_articles, generate_california_llc_certificate
+from app import (
+    CompanyFormation,
+    generate_delaware_articles,
+    generate_california_articles,
+    generate_california_llc_certificate,
+    generate_new_york_articles,
+    generate_new_york_llc_certificate,
+)
 from pydantic import ValidationError
 from PyPDF2 import PdfReader
 import io
@@ -102,3 +109,49 @@ def test_california_llc_pdf():
     assert "ARTICLE I: The name of the limited liability company is:" in text
     assert "ARTICLE II: The purpose of the limited liability company" in text
     assert "ARTICLE III: The name and address in California" in text
+
+
+def test_new_york_corporation_pdf():
+    test_data = {
+        "company_name": "New York Test Corp",
+        "state_of_formation": "NY",
+        "company_type": "corporation",
+        "incorporator_name": "Testy McTestface"
+    }
+    
+    pdf_buffer = generate_new_york_articles(CompanyFormation(**test_data))
+    pdf_buffer.seek(0)
+    
+    reader = PdfReader(pdf_buffer)
+    text = "\n".join(page.extract_text() for page in reader.pages)
+    
+    assert "New York Test Corp" in text
+    assert "CERTIFICATE OF INCORPORATION" in text
+    assert "FIRST: The name of the corporation is:" in text
+    assert "SECOND: The county within the State of New York" in text
+    assert "THIRD: The purpose of the corporation is to engage in any lawful act or activity" in text
+    assert "FOURTH: The aggregate number of shares" in text
+    assert "Testy McTestface" in text
+
+
+def test_new_york_llc_pdf():
+    test_data = {
+        "company_name": "New York Test LLC",
+        "state_of_formation": "NY",
+        "company_type": "LLC",
+        "incorporator_name": "Testy McTestface"
+    }
+    
+    pdf_buffer = generate_new_york_llc_certificate(CompanyFormation(**test_data))
+    pdf_buffer.seek(0)
+    
+    reader = PdfReader(pdf_buffer)
+    text = "\n".join(page.extract_text() for page in reader.pages)
+    
+    assert "New York Test LLC" in text
+    assert "ARTICLES OF ORGANIZATION" in text
+    assert "FIRST: The name of the limited liability company is:" in text
+    assert "SECOND: The county within the State of New York" in text
+    assert "FOURTH: The name and address of the registered agent in New York" in text
+    assert "Organizer:" in text
+    assert "Testy McTestface" in text
